@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MedPilot — личный врач и план здоровья на год</title>
+<meta name="description" content="Медицинское сопровождение по подписке: персональный план здоровья на год, разбор анализов с подписью врача, структурированная медкарта и проактивные напоминания.">
+<meta property="og:title" content="MedPilot — личный врач и план здоровья на год">
+<meta property="og:description" content="Медицинское сопровождение по подписке: план здоровья, разбор анализов с подписью врача, медкарта и напоминания.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2317493f'/><path d='M6 17h4l2-6 3 12 3-9 2 3h6' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+<style>
+  :root{
+    --green:#17493f; --green-light:#1f5f52; --ivory:#faf7f0; --white:#fff;
+    --text:#1a1a1a; --muted:#6b7280; --border:#e5e7eb;
+    --pastel-green:#dcebe4; --pastel-peach:#fbe7d9; --pastel-blue:#dfe9f7; --pastel-yellow:#f8efd4;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--ivory); color:var(--text);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1040px; margin:0 auto; padding:0 20px}
+  h1,h2,h3{line-height:1.2; margin:0}
+  a{color:inherit}
+
+  /* hero */
+  header{background:var(--green); color:#fff; padding:28px 0 72px}
+  .brand{display:flex; align-items:center; gap:10px; font-weight:700; font-size:18px}
+  .brand svg{display:block}
+  .hero{margin-top:64px; max-width:640px}
+  .hero h1{font-size:clamp(30px,5.2vw,46px); font-weight:800; letter-spacing:-0.02em}
+  .hero p{margin:18px 0 0; font-size:clamp(16px,2.2vw,19px); color:#cfe0da}
+  .badge{
+    display:inline-block; margin-top:26px; padding:8px 14px; border-radius:999px;
+    background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25);
+    font-size:13px; color:#eaf3ef;
+  }
+
+  /* cards */
+  section{padding:64px 0}
+  .kicker{font-size:13px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600}
+  h2{font-size:clamp(24px,3.4vw,32px); font-weight:700; margin-top:10px}
+  .lead{margin:14px 0 0; color:var(--muted); max-width:620px}
+  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; margin-top:34px}
+  .card{background:var(--white); border:1px solid var(--border); border-radius:18px; padding:22px}
+  .ic{width:42px; height:42px; border-radius:50%; display:grid; place-items:center; font-size:20px}
+  .card h3{font-size:17px; margin:14px 0 8px}
+  .card p{margin:0; color:var(--muted); font-size:15px}
+
+  /* steps */
+  .steps{counter-reset:s; display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px; margin-top:34px}
+  .step{background:var(--white); border:1px solid var(--border); border-radius:18px; padding:22px}
+  .step::before{
+    counter-increment:s; content:counter(s);
+    display:grid; place-items:center; width:32px; height:32px; border-radius:50%;
+    background:var(--pastel-green); color:var(--green); font-weight:700; font-size:15px; margin-bottom:14px;
+  }
+  .step h3{font-size:16px; margin:0 0 6px}
+  .step p{margin:0; color:var(--muted); font-size:15px}
+
+  /* screens */
+  .shots{background:var(--green); color:#fff}
+  .shots .lead{color:#cfe0da}
+  .phones{display:flex; gap:28px; flex-wrap:wrap; justify-content:center; margin-top:40px}
+  .phone{
+    width:min(280px,72vw); border-radius:38px; padding:10px;
+    background:#0f2f28; border:1px solid rgba(255,255,255,.16);
+    box-shadow:0 24px 60px rgba(0,0,0,.28);
+  }
+  .phone img{display:block; width:100%; border-radius:29px}
+  .phone figcaption{margin:14px 4px 4px; font-size:14px; color:#cfe0da; text-align:center}
+
+  /* status + notice */
+  .split{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; margin-top:34px}
+  .panel{background:var(--white); border:1px solid var(--border); border-radius:18px; padding:24px}
+  .panel h3{font-size:17px; margin-bottom:10px}
+  .panel ul{margin:0; padding-left:18px; color:var(--muted); font-size:15px}
+  .panel li{margin:6px 0}
+  .notice{background:var(--pastel-peach); border:1px solid #f0d3bd; border-radius:18px; padding:24px; margin-top:16px}
+  .notice h3{font-size:16px; margin-bottom:8px}
+  .notice p{margin:0; font-size:15px; color:#6b4a35}
+
+  footer{background:#0f2f28; color:#a9c4bb; padding:40px 0; font-size:14px}
+  footer a{color:#dcebe4}
+  .foot{display:flex; gap:16px; justify-content:space-between; flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="rgba(255,255,255,.14)"/>
+        <path d="M6 17h4l2-6 3 12 3-9 2 3h6" fill="none" stroke="#fff" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      MedPilot
+    </div>
+
+    <div class="hero">
+      <h1>Личный врач, план здоровья на год и разбор анализов — по подписке</h1>
+      <p>
+        Не разовая консультация, а сопровождение: врач знает вашу историю, следит за
+        показателями и сам напоминает, что пора сделать.
+      </p>
+      <span class="badge">Закрытый пилот · iOS · по приглашениям</span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">Что входит</div>
+    <h2>Здоровье как процесс, а не набор визитов</h2>
+    <p class="lead">
+      Между приёмами человек остаётся один на один с анализами и рекомендациями.
+      MedPilot закрывает этот промежуток.
+    </p>
+
+    <div class="grid">
+      <div class="card">
+        <div class="ic" style="background:var(--pastel-green)">🗓️</div>
+        <h3>План здоровья на год</h3>
+        <p>Какие обследования, когда и зачем. С напоминаниями, а не списком на бумажке.</p>
+      </div>
+      <div class="card">
+        <div class="ic" style="background:var(--pastel-blue)">🧪</div>
+        <h3>Разбор анализов</h3>
+        <p>Загружаете PDF или фото — получаете заключение простым языком. Каждое подписано врачом.</p>
+      </div>
+      <div class="card">
+        <div class="ic" style="background:var(--pastel-peach)">🫀</div>
+        <h3>Аватар здоровья</h3>
+        <p>Тело, где органы подсвечены по вашим показателям. Видно, что в норме, а что требует внимания.</p>
+      </div>
+      <div class="card">
+        <div class="ic" style="background:var(--pastel-yellow)">📋</div>
+        <h3>Медкарта в одном месте</h3>
+        <p>Анализы, заключения, назначения и записи собраны и структурированы, а не разбросаны по чатам.</p>
+      </div>
+      <div class="card">
+        <div class="ic" style="background:var(--pastel-blue)">💬</div>
+        <h3>Запрос врачу</h3>
+        <p>Описываете, что беспокоит. Врач разбирает случай и отвечает — с историей обращения.</p>
+      </div>
+      <div class="card">
+        <div class="ic" style="background:var(--pastel-green)">🔔</div>
+        <h3>Проактивные напоминания</h3>
+        <p>Сервис сам подсказывает, что пора сдать контроль или прийти на повтор.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="shots">
+  <div class="wrap">
+    <div class="kicker" style="color:#9dbdb2">Как это выглядит</div>
+    <h2>Аватар здоровья</h2>
+    <p class="lead">
+      Фигура строится по вашему росту и составу тела. Органы окрашены по результатам анализов;
+      по любому можно нажать и увидеть, какие показатели за ним стоят.
+    </p>
+
+    <div class="phones">
+      <figure class="phone" style="margin:0">
+        <img src="img/organs.jpg" alt="Экран аватара здоровья: внутренние органы, подсвеченные по анализам" loading="lazy">
+        <figcaption>Органы — по результатам анализов</figcaption>
+      </figure>
+      <figure class="phone" style="margin:0">
+        <img src="img/muscles.jpg" alt="Экран аватара здоровья: мышечные группы" loading="lazy">
+        <figcaption>Мышцы — по составу тела</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">Как устроено</div>
+    <h2>Четыре шага</h2>
+
+    <div class="steps">
+      <div class="step">
+        <h3>Анкета и анализы</h3>
+        <p>Заполняете медкарту и загружаете имеющиеся результаты.</p>
+      </div>
+      <div class="step">
+        <h3>Врач собирает план</h3>
+        <p>Личный врач разбирает данные и составляет план на год.</p>
+      </div>
+      <div class="step">
+        <h3>Сопровождение</h3>
+        <p>Напоминания, разбор новых анализов, ответы на вопросы.</p>
+      </div>
+      <div class="step">
+        <h3>Пересборка плана</h3>
+        <p>План меняется вслед за показателями, а не остаётся на бумаге.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="split">
+      <div class="panel">
+        <h3>Статус проекта</h3>
+        <ul>
+          <li>Закрытый пилот на ограниченной группе пациентов</li>
+          <li>Приложение для iPhone, доступ по приглашению</li>
+          <li>Публичной регистрации пока нет</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Как устроена работа с данными</h3>
+        <ul>
+          <li>Медицинские записи отделены от аккаунта</li>
+          <li>Доступ врача и координатора разграничен: координатор не видит клиническое содержимое</li>
+          <li>Каждое заключение подписывает врач — черновики пациенту не показываются</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="notice">
+      <h3>Важно</h3>
+      <p>
+        Сервис не заменяет очный приём и не ставит диагноз дистанционно: онлайн — это
+        рекомендации и расшифровка результатов. При острых состояниях звоните 103.
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div>MedPilot · закрытый пилот</div>
+    <div><a href="mailto:hello@example.com">hello@example.com</a></div>
+  </div>
+</footer>
+
+</body>
+</html>
